@@ -1,0 +1,254 @@
+/* 导入 React Flow 样式 */
+@import '@xyflow/react/dist/style.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
+
+  body {
+    @apply bg-gray-50 text-gray-900 antialiased font-sans;
+  }
+}
+
+@layer components {
+
+  /* 自定义滚动条样式 */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full border-2 border-transparent bg-clip-padding;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400;
+  }
+
+  /* React Flow 自定义样式 */
+  .react-flow__node-custom {
+    @apply bg-white rounded-lg shadow-md border border-gray-200;
+  }
+
+  .react-flow__handle {
+    @apply w-3 h-3 bg-primary-500 border-2 border-white;
+  }
+
+  .react-flow__edge-path {
+    @apply stroke-2;
+  }
+}
+
+/* 动画 */
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* 自定义窗口样式 */
+.drag-region {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* macOS 特有样式 */
+@media (prefers-color-scheme: light) {
+  .drag-region {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .drag-region {
+    background: rgba(30, 30, 30, 0.95);
+    backdrop-filter: blur(10px);
+  }
+}
+
+/* 优化渲染性能 */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* MDXEditor Tooltip Fix */
+/* Target common MDXEditor tooltip classes and Radix popper wrappers */
+[data-radix-popper-content-wrapper],
+.base-tooltip-content,
+[class*="_tooltipContent_"],
+[class*="_tooltipTrigger_"],
+.mdxeditor-tooltip,
+.mdxeditor-toolbar-tooltip,
+.mdxeditor-popup-container {
+  z-index: 999999 !important;
+}
+
+/* MDXEditor Full Height & Scrolling - Robust Version */
+.mdx-editor-full-height {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Propagate flex and height through MDXEditor's internal wrappers */
+.mdx-editor-full-height .mdxeditor-diff-source-wrapper,
+.mdx-editor-full-height .mdxeditor-rich-text-editor,
+.mdx-editor-full-height .mdxeditor-root-contenteditable {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+/* The actual lexical scroll container */
+.mdx-editor-full-height .mdxeditor-root-contenteditable {
+  overflow-y: auto !important;
+  position: relative !important;
+}
+
+/* Hide rich-text editor when the source editor is present (meaning we are in source mode) */
+/* The layout is usually .mdxeditor-diff-source-wrapper > .mdxeditor-rich-text-editor THEN .mdxeditor-source-editor */
+.mdx-editor-full-height .mdxeditor-diff-source-wrapper:has(> .mdxeditor-source-editor)>.mdxeditor-rich-text-editor {
+  display: none !important;
+}
+
+/* Force diff source editor to take full height */
+.mdx-editor-full-height .mdxeditor-diff-source-wrapper {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Let the source viewer flex and fill the space */
+.mdx-editor-full-height .mdxeditor-source-editor {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 0 !important;
+}
+
+/* Hide the preview split view inside the source editor if it exists, but ensure CodeMirror fills size */
+.mdx-editor-full-height .cm-editor {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  overflow: hidden !important;
+}
+
+.mdx-editor-full-height .cm-scroller {
+  flex: 1 !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+}
+
+/* Make sure the editable area itself doesn't restrict height */
+.mdx-editor-full-height .mdxeditor-root-contenteditable>div {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Tailwind Typography (Prose) Overrides for a Premium Look */
+.prose {
+  --tw-prose-body: #374151;
+  --tw-prose-headings: #111827;
+  --tw-prose-links: #2563EB;
+  --tw-prose-bold: #111827;
+  --tw-prose-counters: #6B7280;
+  --tw-prose-bullets: #D1D5DB;
+  --tw-prose-quotes: #111827;
+  --tw-prose-quote-borders: #E5E7EB;
+  --tw-prose-captions: #6B7280;
+  --tw-prose-code: #111827;
+  --tw-prose-pre-code: #F3F4F6;
+  --tw-prose-pre-bg: #F9FAFB;
+  --tw-prose-th-borders: #E5E7EB;
+  --tw-prose-td-borders: #F3F4F6;
+  line-height: 1.625;
+}
+
+.prose h1 {
+  @apply text-3xl font-extrabold mb-4 mt-8;
+}
+
+.prose h2 {
+  @apply text-2xl font-bold mb-3 mt-6 pb-1 border-b border-gray-100;
+}
+
+.prose h3 {
+  @apply text-xl font-semibold mb-2 mt-4;
+}
+
+.prose p {
+  @apply mt-2 mb-3 leading-relaxed;
+}
+
+.prose ul,
+.prose ol {
+  @apply mt-2 mb-3 pl-6;
+}
+
+.prose li {
+  @apply my-1;
+}
+
+.prose blockquote {
+  @apply border-l-4 border-gray-200 pl-4 italic text-gray-600 my-4;
+}
+
+.prose code {
+  @apply bg-gray-100 px-1.5 py-0.5 rounded text-sm font-medium text-pink-600 before:content-none after:content-none;
+}
+
+.prose pre {
+  @apply bg-gray-50 border border-gray-200 rounded-xl p-4 my-4 overflow-x-auto;
+}
+
+.prose table {
+  @apply w-full border-collapse my-4 text-sm;
+}
+
+.prose th {
+  @apply bg-gray-50 font-semibold text-gray-700 px-4 py-3 text-left border-b-2 border-gray-200;
+}
+
+.prose td {
+  @apply px-4 py-3 border-b border-gray-100 text-gray-600;
+}
+
+/* Ensure the shared container in Workspace restricts height for scrolling */
+.workspace-content-container {
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Ensure the outer wrapper in MarkdownEditor also has min-height: 0 to prevent expanding */
+.MarkdownEditor-wrapper {
+  min-height: 0 !important;
+}

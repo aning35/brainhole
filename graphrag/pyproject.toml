@@ -1,0 +1,10 @@
+[project]
+name = "brainhole-graphrag"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "graphrag>=3.0.6",
+    "tenacity>=8.0.0",
+]

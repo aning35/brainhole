@@ -1,0 +1,62 @@
+import type { ForgeConfig } from '@electron-forge/shared-types';
+import { MakerSquirrel } from '@electron-forge/maker-squirrel';
+import { MakerZIP } from '@electron-forge/maker-zip';
+import { MakerDeb } from '@electron-forge/maker-deb';
+import { VitePlugin } from '@electron-forge/plugin-vite';
+
+// DMG 需要 appdmg 原生模块，CI 中不稳定，通过环境变量控制
+// 本地构建 DMG: ENABLE_DMG=1 npm run make
+const enableDmg = process.env.ENABLE_DMG === '1';
+
+const makers: any[] = [
+  new MakerSquirrel({
+    name: 'brainhole',
+    authors: 'Brainhole Team',
+  }),
+  new MakerZIP({}, ['darwin']),
+  new MakerDeb({
+    options: {
+      name: 'brainhole',
+      productName: 'Brainhole',
+    },
+  }),
+];
+
+if (enableDmg) {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { MakerDMG } = require('@electron-forge/maker-dmg');
+  makers.push(new MakerDMG({ name: 'Brainhole' }));
+}
+
+const config: ForgeConfig = {
+  packagerConfig: {
+    name: 'Brainhole',
+    executableName: 'brainhole',
+    asar: true,
+    icon: './assets/icon',
+  },
+  rebuildConfig: {},
+  makers,
+  plugins: [
+    new VitePlugin({
+      build: [
+        {
+          entry: 'src/main/main.ts',
+          config: 'vite.main.config.ts',
+        },
+        {
+          entry: 'src/preload/preload.ts',
+          config: 'vite.preload.config.ts',
+        },
+      ],
+      renderer: [
+        {
+          name: 'main_window',
+          config: 'vite.config.ts',
+        },
+      ],
+    }),
+  ],
+};
+
+export default config;

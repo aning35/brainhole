@@ -1,0 +1,145 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      release:
+        description: 'Create a GitHub Release'
+        required: false
+        default: 'false'
+        type: boolean
+
+# 确保同一时间只有一个构建在运行
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            platform: darwin
+            arch: x64
+          - os: macos-latest
+            platform: darwin
+            arch: arm64
+          - os: windows-latest
+            platform: win32
+            arch: x64
+          - os: ubuntu-latest
+            platform: linux
+            arch: x64
+
+    runs-on: ${{ matrix.os }}
+    # 防止构建超时（默认 6 小时太长）
+    timeout-minutes: 30
+
+    # 统一使用 bash，避免 Windows cmd "Terminate batch job (Y/N)?" 挂起
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      # Linux 需要一些额外的系统依赖
+      - name: Install Linux dependencies
+        if: matrix.platform == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dpkg fakeroot rpm
+
+      # Windows/Linux 需要 Python 来编译 native 模块 (better-sqlite3)
+      - name: Setup Python (for native modules)
+        if: matrix.platform != 'darwin'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # 统一构建步骤
+      - name: Build application
+        run: npx electron-forge make --arch=${{ matrix.arch }}
+        env:
+          DEBUG: electron-forge:*
+
+      # macOS: 用原生 hdiutil 生成 DMG（绕过 appdmg 编译问题）
+      - name: Create DMG (macOS only)
+        if: matrix.platform == 'darwin'
+        run: |
+          APP_PATH="out/Brainhole-darwin-${{ matrix.arch }}/Brainhole.app"
+          DMG_PATH="out/make/Brainhole-darwin-${{ matrix.arch }}-${{ github.ref_name }}.dmg"
+          mkdir -p out/make
+
+          # 创建临时目录，放入 .app 和 Applications 快捷方式
+          STAGE_DIR=$(mktemp -d)
+          cp -R "$APP_PATH" "$STAGE_DIR/"
+          ln -s /Applications "$STAGE_DIR/Applications"
+
+          # 用 hdiutil 打包为 DMG
+          hdiutil create -volname "Brainhole" -srcfolder "$STAGE_DIR" -ov -format UDZO "$DMG_PATH"
+          rm -rf "$STAGE_DIR"
+
+          echo "✅ DMG created: $DMG_PATH"
+          ls -lh "$DMG_PATH"
+
+      # 上传构建产物
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: brainhole-${{ matrix.platform }}-${{ matrix.arch }}
+          path: |
+            out/make/**/*.dmg
+            out/make/**/*.zip
+            out/make/**/*.exe
+            out/make/**/*.nupkg
+            out/make/**/*.deb
+            out/make/**/*.rpm
+          if-no-files-found: warn
+
+  # 当推送 tag 时自动创建 Release
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && github.event.inputs.release == 'true')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: false
+
+      - name: List artifacts
+        run: find artifacts -type f | head -50
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          generate_release_notes: true
+          files: |
+            artifacts/**/*.dmg
+            artifacts/**/*.zip
+            artifacts/**/*.exe
+            artifacts/**/*.deb
+            artifacts/**/*.rpm
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

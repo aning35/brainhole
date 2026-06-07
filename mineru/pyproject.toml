@@ -1,0 +1,17 @@
+[project]
+name = "brainhole-mineru"
+version = "0.1.0"
+description = "MinerU PDF parser service for Brainhole"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "mineru[all]",
+    "docling",
+    "markitdown[all]",
+]
+
+[tool.uv]
+# nvidia-nccl-cu12 only has Linux wheels; exclude it on Windows
+override-dependencies = [
+    "nvidia-nccl-cu12>=0.0.0; sys_platform != 'win32'",
+]

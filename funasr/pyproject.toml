@@ -1,0 +1,13 @@
+[project]
+name = "brainhole-funasr"
+version = "0.1.0"
+description = "FunASR audio transcription service for Brainhole"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "funasr>=1.2.0",
+    "modelscope",
+    "torch",
+    "torchaudio",
+    "pydub",
+]
