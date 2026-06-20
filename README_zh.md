@@ -1,6 +1,8 @@
 <div align="center">
 
-# 🧠 Brainhole
+<img src="./assets/icon.png" width="100" alt="Brainhole Logo" />
+
+# Brainhole 脑洞
 
 **开源的 AI 知识工作台 — 可视化画布 × 知识图谱 × 多模态文档解析**
 
@@ -81,7 +83,15 @@
 
 ## 快速开始
 
-### 环境要求
+### 下载与安装
+
+你可以直接从我们的 [GitHub Releases](https://github.com/aning35/brainhole/releases) 页面下载适用于你操作系统的预编译桌面应用程序。
+
+- **macOS**: 下载 `.dmg` 文件。
+- **Windows**: 下载 `.exe` 文件。
+- *注意：用于 OCR、语音识别和 GraphRAG 的 Python 运行环境将在首次运行相关功能时自动下载和配置，无需手动干预。*
+
+### 环境要求 (针对开发者)
 
 - **Node.js** ≥ 18
 - **uv** — Python 包管理器（[安装指南](https://docs.astral.sh/uv/getting-started/installation/)）

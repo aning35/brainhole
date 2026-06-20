@@ -28,7 +28,7 @@ const createWindow = () => {
     minWidth: 1024,
     minHeight: 768,
     webPreferences: {
-      preload: path.join(__dirname, '../preload/preload.js'),
+      preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       sandbox: false,
       webviewTag: true,  // Required for <webview> PDF preview

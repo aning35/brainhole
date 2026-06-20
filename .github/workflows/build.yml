@@ -29,7 +29,7 @@ jobs:
           - os: macos-latest
             platform: darwin
             arch: arm64
-          - os: windows-latest
+          - os: windows-2022
             platform: win32
             arch: x64
           - os: ubuntu-latest
@@ -74,7 +74,12 @@ jobs:
 
       # 统一构建步骤
       - name: Build application
-        run: npx electron-forge make --arch=${{ matrix.arch }}
+        run: |
+          if [ "${{ matrix.platform }}" == "darwin" ]; then
+            npx electron-forge package --arch=${{ matrix.arch }}
+          else
+            npx electron-forge make --arch=${{ matrix.arch }}
+          fi
         env:
           DEBUG: electron-forge:*
 
@@ -105,7 +110,6 @@ jobs:
           name: brainhole-${{ matrix.platform }}-${{ matrix.arch }}
           path: |
             out/make/**/*.dmg
-            out/make/**/*.zip
             out/make/**/*.exe
             out/make/**/*.nupkg
             out/make/**/*.deb
@@ -137,7 +141,6 @@ jobs:
           generate_release_notes: true
           files: |
             artifacts/**/*.dmg
-            artifacts/**/*.zip
             artifacts/**/*.exe
             artifacts/**/*.deb
             artifacts/**/*.rpm

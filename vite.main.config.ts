@@ -12,6 +12,7 @@ export default defineConfig({
       external: [
         'electron',
         'better-sqlite3',
+        'pdf-parse',
         ...builtinModules,
         ...builtinModules.map(m => `node:${m}`),
       ],

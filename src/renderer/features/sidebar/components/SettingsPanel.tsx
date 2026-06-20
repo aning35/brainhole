@@ -486,8 +486,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                         {activeTab === 'about' && (
                             <div className="max-w-xl mx-auto pb-12">
                                 <div className="flex flex-col items-center justify-center py-6 text-center select-none">
-                                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/10 flex items-center justify-center text-white mb-4 transform hover:scale-105 transition-transform duration-300">
-                                        <span className="text-3xl">🧠</span>
+                                    <div className="w-20 h-20 rounded-[1.25rem] bg-gradient-to-tr from-blue-50 to-indigo-50 shadow-lg shadow-blue-500/10 flex items-center justify-center mb-4 transform hover:scale-105 transition-transform duration-300 border border-white/60 p-1">
+                                        <img src={new URL('../../../../../assets/icon.png', import.meta.url).href} alt="Brainhole Logo" className="w-full h-full object-contain drop-shadow-md rounded-[1rem]" />
                                     </div>
 
                                     <h3 className="text-xl font-black text-slate-800 tracking-tight">Brainhole</h3>
@@ -496,7 +496,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                                     <div className="mt-5 flex flex-col items-center gap-1.5 bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 w-full max-w-sm">
                                         <div className="flex items-center justify-between w-full border-b border-slate-200/50 pb-2">
                                             <span className="text-[11px] font-semibold text-slate-500">{t('settings.about.version')}</span>
-                                            <span className="text-[10px] font-mono font-bold text-slate-800 bg-blue-100/60 px-2 py-0.5 rounded text-blue-700">v1.0.0</span>
+                                            <span className="text-[10px] font-mono font-bold text-slate-800 bg-blue-100/60 px-2 py-0.5 rounded text-blue-700">v0.1.0</span>
                                         </div>
                                         <div className="flex items-center justify-between w-full border-b border-slate-200/50 py-2">
                                             <span className="text-[11px] font-semibold text-slate-500">GitHub</span>

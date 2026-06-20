@@ -1,6 +1,8 @@
 <div align="center">
 
-# 🧠 Brainhole
+<img src="./assets/icon.png" width="100" alt="Brainhole Logo" />
+
+# Brainhole
 
 **Open-source AI Knowledge Workbench — Visual Canvas × Knowledge Graph × Multimodal Document Parsing**
 
@@ -81,7 +83,15 @@ A desktop AI application for knowledge workers. Build your own analysis workflow
 
 ## Getting Started
 
-### Prerequisites
+### Download
+
+You can download the pre-compiled desktop application for your operating system directly from our [GitHub Releases](https://github.com/aning35/brainhole/releases) page.
+
+- **macOS**: Download the `.dmg` file.
+- **Windows**: Download the `.exe` file.
+- *Note: Python environments (for OCR, Speech Recognition, and GraphRAG) will be automatically downloaded and configured upon the first run.*
+
+### Prerequisites (For Developers)
 
 - **Node.js** ≥ 18
 - **uv** — Python package manager ([Install Guide](https://docs.astral.sh/uv/getting-started/installation/))

@@ -281,7 +281,7 @@ export default function App() {
             <div className="flex-1 flex flex-col min-w-0 h-full bg-white relative">
               {/* Top bar (Tabs & Toolbar area) */}
               <div
-                className="flex-shrink-0 bg-gray-200 border-b border-gray-300 flex items-center gap-1 overflow-x-auto no-scrollbar relative z-0"
+                className="flex-shrink-0 bg-gray-200 border-b border-gray-300 flex items-center gap-1 relative z-0"
                 style={{
                   height: '40px', // Match Sidebar header height to prevent layout jump
                   paddingLeft: isDarwin ? (!sidebarCollapsed ? '16px' : '84px') : '16px',
@@ -304,9 +304,13 @@ export default function App() {
                 )}
 
                 {/* Tabs / Toolbar Content */}
-                <div className="flex-1 flex items-center h-full px-2 gap-1" style={{ WebkitAppRegion: 'no-drag' } as any}>
+                <div className="flex-1 flex items-center h-full px-2 gap-1 min-w-0">
                   {currentPage === 'canvas' ? (
-                    <div className="flex items-end h-full gap-1">
+                    <>
+                      <div 
+                        className="flex items-end h-full gap-1 overflow-x-auto no-scrollbar shrink-0" 
+                        style={{ WebkitAppRegion: 'no-drag' } as any}
+                      >
                       {/* Tabs */}
                       {openCanvasIds.map(id => {
                         const session = canvasSessionStates[id];
@@ -348,14 +352,17 @@ export default function App() {
 
                       <button
                         onClick={handleNewCanvas}
-                        className="p-1.5 ml-1 mb-1 rounded-md hover:bg-gray-300/80 text-gray-600 transition-colors"
+                        className="p-1.5 ml-1 mb-1 rounded-md hover:bg-gray-300/80 text-gray-600 transition-colors shrink-0"
                         title={t('app.newCanvas')}
                       >
                         <Plus className="w-4 h-4" />
                       </button>
-                    </div>
+                      </div>
+                      {/* Draggable Empty Space */}
+                      <div className="flex-1 h-full" />
+                    </>
                   ) : (
-                    <div className="w-full flex items-center h-full">
+                    <div className="w-full flex items-center h-full" style={{ WebkitAppRegion: 'no-drag' } as any}>
                       <ListPageToolbar
                         title={t('app.allFiles')}
                         searchQuery={searchQuery}

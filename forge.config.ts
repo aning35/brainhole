@@ -1,5 +1,5 @@
 import type { ForgeConfig } from '@electron-forge/shared-types';
-import { MakerSquirrel } from '@electron-forge/maker-squirrel';
+
 import { MakerZIP } from '@electron-forge/maker-zip';
 import { MakerDeb } from '@electron-forge/maker-deb';
 import { VitePlugin } from '@electron-forge/plugin-vite';
@@ -9,10 +9,19 @@ import { VitePlugin } from '@electron-forge/plugin-vite';
 const enableDmg = process.env.ENABLE_DMG === '1';
 
 const makers: any[] = [
-  new MakerSquirrel({
-    name: 'brainhole',
-    authors: 'Brainhole Team',
-  }),
+  {
+    name: '@glockx/electron-forge-maker-nsis',
+    config: {
+      getAppBuilderConfig: () => ({
+        publish: null,
+        nsis: {
+          oneClick: false,
+          allowToChangeInstallationDirectory: true,
+          artifactName: '${productName} Setup ${version} ${arch}.${ext}'
+        }
+      })
+    }
+  },
   new MakerZIP({}, ['darwin']),
   new MakerDeb({
     options: {
@@ -32,8 +41,15 @@ const config: ForgeConfig = {
   packagerConfig: {
     name: 'Brainhole',
     executableName: 'brainhole',
-    asar: true,
+    asar: {
+      unpack: '{**/*.node,**/node_modules/pdf-parse/**/*}',
+    },
     icon: './assets/icon',
+    extraResource: [
+      './funasr',
+      './graphrag',
+      './mineru'
+    ]
   },
   rebuildConfig: {},
   makers,

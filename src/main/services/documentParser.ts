@@ -255,14 +255,12 @@ sys.exit(0)
 
         // JS Fallback
         try {
-            const { PDFParse } = require('pdf-parse');
+            const pdfParse = require('pdf-parse');
             const buffer = await fs.readFile(filePath);
-            const pdf = new PDFParse({ data: buffer });
-            await pdf.load();
-            const result = await pdf.getText();
+            const data = await pdfParse(buffer);
             return {
-                text: result.text || '',
-                pageCount: result.total,
+                text: data.text || '',
+                pageCount: data.numpages,
             };
         } catch (e: any) {
             console.error('[DocumentParser] JS pdf-parse failed:', e);
