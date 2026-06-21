@@ -15,6 +15,9 @@ const makers: any[] = [
     config: {
       getAppBuilderConfig: () => ({
         publish: null,
+        win: {
+          target: ['nsis']
+        },
         nsis: {
           oneClick: false,
           allowToChangeInstallationDirectory: true,

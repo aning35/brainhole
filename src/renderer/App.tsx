@@ -308,7 +308,7 @@ export default function App() {
                   {currentPage === 'canvas' ? (
                     <>
                       <div 
-                        className="flex items-end h-full gap-1 overflow-x-auto no-scrollbar shrink-0" 
+                        className="flex items-end h-full gap-1 overflow-x-auto overflow-y-hidden no-scrollbar min-w-0" 
                         style={{ WebkitAppRegion: 'no-drag' } as any}
                       >
                       {/* Tabs */}
