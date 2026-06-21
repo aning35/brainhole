@@ -23,7 +23,7 @@ const makers: any[] = [
         nsis: {
           oneClick: false,
           allowToChangeInstallationDirectory: true,
-          artifactName: '${productName} Setup ${version} ${arch}.${ext}',
+          artifactName: '${productName}-Setup-${version}-${arch}.${ext}',
           createDesktopShortcut: 'always',
           createStartMenuShortcut: true,
           shortcutName: 'Brainhole'
