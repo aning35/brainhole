@@ -2,6 +2,7 @@ import type { ForgeConfig } from '@electron-forge/shared-types';
 
 import { MakerZIP } from '@electron-forge/maker-zip';
 import { MakerDeb } from '@electron-forge/maker-deb';
+import { MakerWix } from '@electron-forge/maker-wix';
 import { VitePlugin } from '@electron-forge/plugin-vite';
 
 // DMG 需要 appdmg 原生模块，CI 中不稳定，通过环境变量控制
@@ -22,6 +23,16 @@ const makers: any[] = [
       })
     }
   },
+  new MakerWix({
+    language: 2052, // Simplified Chinese
+    manufacturer: 'Brainhole Team',
+    description: 'Brainhole AI Knowledge Workbench',
+    name: 'Brainhole',
+    exe: 'brainhole',
+    ui: {
+      chooseDirectory: true
+    }
+  }),
   new MakerZIP({}, ['darwin']),
   new MakerDeb({
     options: {
