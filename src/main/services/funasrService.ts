@@ -56,7 +56,7 @@ export async function checkFunasrEnv(autoInstall = false): Promise<{ ready: bool
                 console.log('[FunASR] Auto-installing dependencies via uv sync...');
                 const env = {
                     ...process.env,
-                    PATH: `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`,
+                    PATH: process.platform === 'win32' ? (process.env.PATH || process.env.Path) : `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`,
                     HF_ENDPOINT: process.env.HF_ENDPOINT || 'https://hf-mirror.com',
                 };
                 await new Promise<void>((resolve, reject) => {
@@ -98,7 +98,7 @@ function runCmd(cmd: string, args: string[], cwd: string, sendLog: LogCallback):
     return new Promise((resolve, reject) => {
         const env = {
             ...process.env,
-            PATH: `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`,
+            PATH: process.platform === 'win32' ? (process.env.PATH || process.env.Path) : `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`,
             HF_ENDPOINT: process.env.HF_ENDPOINT || 'https://hf-mirror.com',
         };
         const child = spawn(cmd, args, { cwd, shell: isWin, env });
@@ -272,7 +272,7 @@ export async function transcribeAudioToMarkdown(
             await new Promise<void>((resolve, reject) => {
                 const env = {
                     ...process.env,
-                    PATH: `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`,
+                    PATH: process.platform === 'win32' ? (process.env.PATH || process.env.Path) : `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`,
                     HF_ENDPOINT: process.env.HF_ENDPOINT || 'https://hf-mirror.com',
                 };
                 const child = spawn('ffmpeg', [
@@ -315,7 +315,7 @@ export async function transcribeAudioToMarkdown(
         const result = await new Promise<any>((resolve, reject) => {
             const env = {
                 ...process.env,
-                PATH: `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`,
+                PATH: process.platform === 'win32' ? (process.env.PATH || process.env.Path) : `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`,
                 HF_ENDPOINT: process.env.HF_ENDPOINT || 'https://hf-mirror.com',
             };
             const child = spawn(pythonExe, [scriptPath, audioPath], { env, shell: false });

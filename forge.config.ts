@@ -15,13 +15,18 @@ const makers: any[] = [
     config: {
       getAppBuilderConfig: () => ({
         publish: null,
+        appId: 'com.brainhole.app',
+        productName: 'Brainhole',
         win: {
           target: ['nsis']
         },
         nsis: {
           oneClick: false,
           allowToChangeInstallationDirectory: true,
-          artifactName: '${productName} Setup ${version} ${arch}.${ext}'
+          artifactName: '${productName} Setup ${version} ${arch}.${ext}',
+          createDesktopShortcut: 'always',
+          createStartMenuShortcut: true,
+          shortcutName: 'Brainhole'
         }
       })
     }

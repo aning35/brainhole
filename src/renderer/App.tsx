@@ -308,8 +308,14 @@ export default function App() {
                   {currentPage === 'canvas' ? (
                     <>
                       <div 
-                        className="flex items-end h-full gap-1 overflow-x-auto overflow-y-hidden no-scrollbar min-w-0" 
+                        className="flex items-end h-full gap-1 overflow-x-auto overflow-y-hidden no-scrollbar min-w-0 scroll-smooth" 
                         style={{ WebkitAppRegion: 'no-drag' } as any}
+                        onWheel={(e) => {
+                          // Allow vertical scrolling to scroll tabs horizontally
+                          if (e.deltaY !== 0) {
+                            e.currentTarget.scrollLeft += e.deltaY;
+                          }
+                        }}
                       >
                       {/* Tabs */}
                       {openCanvasIds.map(id => {
@@ -360,6 +366,11 @@ export default function App() {
                       </div>
                       {/* Draggable Empty Space */}
                       <div className="flex-1 h-full" />
+                      
+                      {/* Windows Window Controls Placeholder */}
+                      {window.electronAPI?.platform !== 'darwin' && (
+                        <div className="w-[140px] shrink-0 h-full" style={{ WebkitAppRegion: 'no-drag' } as any} />
+                      )}
                     </>
                   ) : (
                     <div className="w-full flex items-center h-full" style={{ WebkitAppRegion: 'no-drag' } as any}>

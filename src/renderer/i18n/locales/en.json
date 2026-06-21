@@ -156,6 +156,7 @@
     "delete": "Delete",
     "confirmDelete": "Confirm Deletion",
     "deleteMsg": "Are you sure you want to delete {{type}} \"{{name}}\"? This action cannot be undone.",
+    "deleteMultipleMsg": "Are you sure you want to delete {{count}} items? This action cannot be undone.",
     "typeFolder": "folder",
     "typeFile": "file",
     "noVault": {

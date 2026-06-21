@@ -222,15 +222,26 @@ export function useFileTreeContextMenu(
                 icon: <Trash2 className="w-4 h-4 text-red-500" />,
                 className: "text-red-500 hover:text-red-600 hover:bg-red-50",
                 onClick: () => {
+                    const multiSelectedIds = useCanvasStore.getState().multiSelectedIds;
+                    const toDelete = multiSelectedIds.includes(item.id) && multiSelectedIds.length > 1
+                        ? multiSelectedIds
+                        : [item.id];
+
                     setConfirmConfig({
                         isOpen: true,
                         title: t('sidebar.confirmDelete'),
-                        message: t('sidebar.deleteMsg', { type: type === 'folder' ? t('sidebar.typeFolder') : t('sidebar.typeFile'), name: item.name }),
-                        onConfirm: () => {
-                            if (type === 'folder') {
-                                deleteFolder(item.id);
-                            } else {
-                                deleteCanvas(item.id);
+                        message: toDelete.length > 1
+                            ? t('sidebar.deleteMultipleMsg', { count: toDelete.length }, `Are you sure you want to delete ${toDelete.length} items? This action cannot be undone.`)
+                            : t('sidebar.deleteMsg', { type: type === 'folder' ? t('sidebar.typeFolder') : t('sidebar.typeFile'), name: item.name }),
+                        onConfirm: async () => {
+                            const { folders } = useCanvasStore.getState();
+                            for (const id of toDelete) {
+                                const isFolder = folders.some((f: any) => f.id === id);
+                                if (isFolder) {
+                                    await deleteFolder(id);
+                                } else {
+                                    await deleteCanvas(id);
+                                }
                             }
                         }
                     });

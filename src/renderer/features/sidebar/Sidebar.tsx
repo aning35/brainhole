@@ -57,6 +57,19 @@ export function Sidebar({ onNavigate, onCollapse }: SidebarProps) {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [recentSnapshot, setRecentSnapshot] = useState<typeof canvases>([]);
   const [showSettings, setShowSettings] = useState(false);
+  const [settingsTab, setSettingsTab] = useState<'ai' | 'docs' | 'general' | 'about'>('ai');
+
+  useEffect(() => {
+    const handleOpenSettings = (e: Event) => {
+      const ce = e as CustomEvent;
+      if (ce.detail?.tab) {
+        setSettingsTab(ce.detail.tab);
+      }
+      setShowSettings(true);
+    };
+    window.addEventListener('open-settings', handleOpenSettings);
+    return () => window.removeEventListener('open-settings', handleOpenSettings);
+  }, []);
 
   useEffect(() => {
     if (activeTab === 'recent') {
@@ -438,7 +451,10 @@ export function Sidebar({ onNavigate, onCollapse }: SidebarProps) {
             </button>
 
             <button
-              onClick={() => setShowSettings(true)}
+              onClick={() => {
+                setSettingsTab('ai');
+                setShowSettings(true);
+              }}
               className={cn(
                 "p-2.5 rounded-xl flex items-center justify-center transition-all duration-200 relative group",
                 "text-gray-500 hover:bg-gray-200 hover:text-gray-800"
@@ -472,7 +488,7 @@ export function Sidebar({ onNavigate, onCollapse }: SidebarProps) {
       </div>
 
       {/* Settings Modal */}
-      {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
+      {showSettings && <SettingsModal onClose={() => setShowSettings(false)} initialTab={settingsTab} />}
     </div>
   );
 }

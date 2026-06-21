@@ -44,7 +44,7 @@ async function setupPythonEnv(event: Electron.IpcMainInvokeEvent, filePath: stri
     // Helper to spawn and wait
     const runCmd = (cmd: string, args: string[], cwd: string = workspacePath) => {
         return new Promise<void>((resolve, reject) => {
-            const env = { ...process.env, PATH: `/opt/homebrew/bin:/usr/local/bin:${require('os').homedir()}/.cargo/bin:${process.env.PATH}` };
+            const env = { ...process.env, PATH: process.platform === 'win32' ? (process.env.PATH || process.env.Path) : `/opt/homebrew/bin:/usr/local/bin:${require('os').homedir()}/.cargo/bin:${process.env.PATH}` };
             const child = spawn(cmd, args, { cwd, shell: isWin, env });
 
             let buffer = '';
@@ -220,7 +220,7 @@ export const initGraphHandlers = () => {
                         ], {
                             cwd: graphRoot,
                             shell: false,  // Use array args to avoid shell path-escaping issues with Chinese/spaces
-                            env: { ...process.env, PATH: `/opt/homebrew/bin:/usr/local/bin:${process.env.PATH}` }
+                            env: { ...process.env, PATH: process.platform === 'win32' ? (process.env.PATH || process.env.Path) : `/opt/homebrew/bin:/usr/local/bin:${process.env.PATH}` }
                         });
                         let stderr = '';
                         initProc.stderr.on('data', (data) => {
@@ -493,7 +493,7 @@ export const initGraphHandlers = () => {
                 patchScriptPath, 'index',
                 '--root', graphRoot
             ], {
-                env: { ...process.env, PATH: `/opt/homebrew/bin:/usr/local/bin:${process.env.PATH}` },
+                env: { ...process.env, PATH: process.platform === 'win32' ? (process.env.PATH || process.env.Path) : `/opt/homebrew/bin:/usr/local/bin:${process.env.PATH}` },
                 shell: false  // Use array args to avoid path escaping issues with Chinese characters/spaces
             });
 
@@ -612,7 +612,7 @@ export const initGraphHandlers = () => {
                     '--method', method,
                     query
                 ], {
-                    env: { ...process.env, PATH: `/opt/homebrew/bin:/usr/local/bin:${process.env.PATH}` },
+                    env: { ...process.env, PATH: process.platform === 'win32' ? (process.env.PATH || process.env.Path) : `/opt/homebrew/bin:/usr/local/bin:${process.env.PATH}` },
                     shell: false
                 });
 

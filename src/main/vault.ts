@@ -438,7 +438,7 @@ export const initVaultHandlers = () => {
                 await new Promise<void>((resolve, reject) => {
                     const env = {
                         ...process.env,
-                        PATH: `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`
+                        PATH: process.platform === 'win32' ? (process.env.PATH || process.env.Path) : `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`
                     };
                     const child = spawn('ffmpeg', [
                         '-i', filePath,

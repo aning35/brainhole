@@ -313,6 +313,12 @@ export const GraphEditor = ({ canvasId: filePath }: { canvasId: string }) => {
                 aiEmbeddingModel,
             } = useCanvasStore.getState();
 
+            if (!aiApiKey || !aiEmbeddingApiKey) {
+                setLogs([{ message: '未配置大模型 API Key，请前往设置页面配置。', type: 'error' }]);
+                window.dispatchEvent(new CustomEvent('open-settings', { detail: { tab: 'ai' } }));
+                return;
+            }
+
             // Resolve entity types from graph's own template
             const templateId = graphData.entityTypeTemplateId || 'general';
             const allTemplates = [...ENTITY_TYPE_TEMPLATES, ...customEntityTemplates];

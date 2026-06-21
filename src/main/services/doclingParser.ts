@@ -29,7 +29,7 @@ async function ensurePythonExecutable(sendLog?: LogCallback): Promise<string> {
     try {
         const env = {
             ...process.env,
-            PATH: `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`
+            PATH: process.platform === 'win32' ? (process.env.PATH || process.env.Path) : `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`,
         };
         await new Promise<void>((resolve, reject) => {
             const child = spawn('uv', ['sync'], { cwd: workspacePath, shell: isWindows, env });
@@ -165,7 +165,7 @@ if __name__ == "__main__":
         await new Promise<void>((resolve, reject) => {
             const env = {
                 ...process.env,
-                PATH: `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`,
+                PATH: process.platform === 'win32' ? (process.env.PATH || process.env.Path) : `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`,
                 HF_ENDPOINT: process.env.HF_ENDPOINT || 'https://huggingface.co',
                 // Inherit proxy settings if present (needed for model downloads)
                 ...(process.env.HTTP_PROXY ? { HTTP_PROXY: process.env.HTTP_PROXY } : {}),

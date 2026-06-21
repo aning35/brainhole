@@ -64,7 +64,7 @@ export async function checkMineruEnv(autoInstall = false): Promise<{ ready: bool
             console.log('[MinerU] Auto-installing dependencies via uv sync...');
             const env = {
                 ...process.env,
-                PATH: `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`,
+                PATH: process.platform === 'win32' ? (process.env.PATH || process.env.Path) : `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`,
                 HF_ENDPOINT: process.env.HF_ENDPOINT || 'https://hf-mirror.com',
             };
             await new Promise<void>((resolve, reject) => {
@@ -90,7 +90,7 @@ function runCmd(cmd: string, args: string[], cwd: string, sendLog: LogCallback):
     return new Promise((resolve, reject) => {
         const env = {
             ...process.env,
-            PATH: `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`,
+            PATH: process.platform === 'win32' ? (process.env.PATH || process.env.Path) : `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`,
             HF_ENDPOINT: process.env.HF_ENDPOINT || 'https://hf-mirror.com',
         };
         const child = spawn(cmd, args, { cwd, shell: isWin, env });
@@ -221,7 +221,7 @@ async function preprocessImageForOCR(imagePath: string, sendLog: LogCallback): P
     const dimensions = await new Promise<string>((resolve, reject) => {
         const env = {
             ...process.env,
-            PATH: `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`,
+            PATH: process.platform === 'win32' ? (process.env.PATH || process.env.Path) : `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`,
             HF_ENDPOINT: process.env.HF_ENDPOINT || 'https://hf-mirror.com',
         };
         const child = spawn(pythonExe, ['-c', pyScript, imagePath, tmpImagePath], {
@@ -301,7 +301,7 @@ export async function parsePdfToMarkdown(
 
             const env = {
                 ...process.env,
-                PATH: `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`,
+                PATH: process.platform === 'win32' ? (process.env.PATH || process.env.Path) : `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`,
                 HF_ENDPOINT: process.env.HF_ENDPOINT || 'https://hf-mirror.com',
                 MINERU_MODEL_SOURCE: isModelScope ? 'modelscope' : 'huggingface'
             };

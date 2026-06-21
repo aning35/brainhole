@@ -227,6 +227,20 @@ export function DataNodeContent({ nodeId, data, isFullscreen = false }: DataNode
     }
     if (isFileRunning(filePath)) return;
 
+    const engine = useCanvasStore.getState().docParserEngine || 'docling';
+    const envStatus = await window.electronAPI.vault.mineruCheckEnv();
+    const modelsStatus = await window.electronAPI.models.getStatus();
+    
+    const isEngineReady = engine === 'docling' 
+        ? modelsStatus.docling?.installed 
+        : modelsStatus.mineru?.installed;
+
+    if (!envStatus.ready || !isEngineReady) {
+        showToast(t('workspace.toast.envNotReady', '环境或模型未初始化，请前往设置下载'), 'warning');
+        window.dispatchEvent(new CustomEvent('open-settings', { detail: { tab: 'docs' } }));
+        return;
+    }
+
     const fileName = filePath.split(/[/\\]/).pop() || filePath;
     const taskId = `mineru:${filePath}`;
     const doRun = async () => {

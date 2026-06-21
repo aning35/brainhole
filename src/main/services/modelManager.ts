@@ -404,7 +404,7 @@ export async function downloadModel(target: 'funasr' | 'mineru' | 'docling', sou
     return new Promise<void>((resolve, reject) => {
         const env = {
             ...process.env,
-            PATH: `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`,
+            PATH: process.platform === 'win32' ? (process.env.PATH || process.env.Path) : `/opt/homebrew/bin:/usr/local/bin:${os.homedir()}/.cargo/bin:${process.env.PATH}`,
             HF_ENDPOINT: source === 'huggingface' ? 'https://huggingface.co' : 'https://hf-mirror.com'
         };
 

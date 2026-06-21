@@ -65,6 +65,21 @@ const PdfViewer = ({ filePath }: { filePath: string }) => {
 
     const handleMineruParse = async () => {
         if (isFileRunning(filePath)) return;
+
+        const engine = useCanvasStore.getState().docParserEngine || 'docling';
+        const envStatus = await window.electronAPI.vault.mineruCheckEnv();
+        const modelsStatus = await window.electronAPI.models.getStatus();
+        
+        const isEngineReady = engine === 'docling' 
+            ? modelsStatus.docling?.installed 
+            : modelsStatus.mineru?.installed;
+
+        if (!envStatus.ready || !isEngineReady) {
+            showToast(t('workspace.toast.envNotReady', '环境或模型未初始化，请前往设置下载'), 'warning');
+            window.dispatchEvent(new CustomEvent('open-settings', { detail: { tab: 'docs' } }));
+            return;
+        }
+
         const doRun = async () => {
             addTask({
                 id: taskId,
@@ -334,6 +349,21 @@ const ImageViewer = ({ filePath }: { filePath: string }) => {
 
     const handleMineruParse = async () => {
         if (isFileRunning(filePath)) return;
+
+        const engine = useCanvasStore.getState().docParserEngine || 'docling';
+        const envStatus = await window.electronAPI.vault.mineruCheckEnv();
+        const modelsStatus = await window.electronAPI.models.getStatus();
+        
+        const isEngineReady = engine === 'docling' 
+            ? modelsStatus.docling?.installed 
+            : modelsStatus.mineru?.installed;
+
+        if (!envStatus.ready || !isEngineReady) {
+            showToast(t('workspace.toast.envNotReady', '环境或模型未初始化，请前往设置下载'), 'warning');
+            window.dispatchEvent(new CustomEvent('open-settings', { detail: { tab: 'docs' } }));
+            return;
+        }
+
         const doRun = async () => {
             addTask({
                 id: taskId,
@@ -519,6 +549,15 @@ const AudioViewer = ({ filePath }: { filePath: string }) => {
 
     const handleTranscribe = async () => {
         if (isFileRunning(filePath)) return;
+
+        const envStatus = await window.electronAPI.vault.funasrCheckEnv();
+        const modelsStatus = await window.electronAPI.models.getStatus();
+        if (!envStatus.ready || !modelsStatus.funasr?.installed) {
+            showToast(t('workspace.toast.envNotReady', '环境或模型未初始化，请前往设置下载'), 'warning');
+            window.dispatchEvent(new CustomEvent('open-settings', { detail: { tab: 'docs' } }));
+            return;
+        }
+
         const doRun = async () => {
             addTask({
                 id: taskId,

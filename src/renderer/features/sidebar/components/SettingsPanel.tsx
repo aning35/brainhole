@@ -7,9 +7,10 @@ import { ModelManagementPanel } from './ModelManagementPanel';
 
 interface SettingsModalProps {
     onClose: () => void;
+    initialTab?: 'ai' | 'docs' | 'general' | 'about';
 }
 
-export function SettingsModal({ onClose }: SettingsModalProps) {
+export function SettingsModal({ onClose, initialTab = 'ai' }: SettingsModalProps) {
     const { t } = useTranslation();
     const {
         aiModel,
@@ -51,7 +52,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
     }, [onClose]);
 
     // New 3-tab layout: ai, docs, general
-    const [activeTab, setActiveTab] = useState<'ai' | 'docs' | 'general' | 'about'>('ai');
+    const [activeTab, setActiveTab] = useState<'ai' | 'docs' | 'general' | 'about'>(initialTab);
 
     // Custom Template Form State
     const [isAddingTemplate, setIsAddingTemplate] = useState(false);
